@@ -1,0 +1,136 @@
+
+.body {
+  background-color: #ffffff;
+  height: 100%;
+}
+
+.text-color{
+    color: black;
+}
+
+#countdown-wrap {
+  width: 90%;
+  height: 150px;
+  padding: 20px;
+  font-family: arial;
+  max-width: 750px;
+  margin: 50px auto 0px;
+}
+
+.text-goal {
+  font-size: 22px;
+  font-weight: 500px;
+  width: 33%;
+  @media only screen and (max-width : 640px) {
+    text-align: center;  
+  }
+}
+
+#glass {
+  width: 100%;
+  height: 20px;
+  background: #d8d8d8;
+  border-radius: 10px;
+  float: left;
+  overflow: hidden;
+}
+
+#progress {
+  float: left;
+  height: 20px;
+  background: #08b1a8;
+  z-index: 333;
+}
+
+.goal-stat {
+  width: 25%;
+  padding: 10px;
+  float: left;
+  margin: 0;
+  @media only screen and (max-width : 640px) {
+    width: 50%;
+    text-align: center;
+  }
+}
+
+.goal-number, .goal-label {
+  display: block;
+}
+
+.goal-number {
+  font-weight: bold;
+}
+
+.thumbnail {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+  transition: 0.3s;
+  border-radius: 5px;
+}
+
+.thumbnail:hover {
+  cursor: pointer;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.7);
+}
+
+.conteiner-title{
+  display: -webkit-box;
+}
+
+.container-cards{
+  max-width: 700px;
+  margin: 50px auto 0px;
+}
+
+@media only screen and (max-width : 640px) {
+  .container-cards{
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+}
+
+.card-item{
+  padding: 10px;
+  float: left;
+  margin: 20px;
+  width: 25%;
+}
+
+.card-label{
+  font-size: 16px;
+}
+
+.icon{
+  font-size: 28px;
+}
+
+.bg-clothing{
+  background-color: #08b1a8 !important;
+}
+
+.color-clothing{
+  color: #08b1a8;
+}
+
+.bg-insurance{
+  background-color: #8e49fd !important;
+}
+
+.color-insurance{
+  color: #8e49fd;
+}
+
+.bg-lodging{
+  background-color: #ff934c !important;
+}
+
+.color-lodging{
+  color: #ff934c;
+}
+
+.bg-food{
+  background-color: #0835b1 !important;
+}
+
+.color-food{
+  color: #0835b1;
+}

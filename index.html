@@ -9,8 +9,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
-<div class="body">
+<div id="dashBoard" class="body">
   <div class="thumbnail" id="countdown-wrap">
     <div class="conteiner-title">
       <div class="text-color text-goal">$0</div>
@@ -47,12 +49,12 @@
     </div>
   </div>
   <div class="container-cards row">
-    <div class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
+    <div v-for="item in data" class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
       <i class="fas fa-tshirt color-clothing"></i>
-      <span class="goal-number text-color">$640</span>
+      <span class="goal-number text-color">${{ item.total }}</span>
       <span class="card-label text-color">Clothing</span>
     </div>
-    <div class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
+    <!-- <div class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
       <i class="fas fa-scroll color-insurance"></i>
       <span class="goal-number text-color">$800</span>
       <span class="card-label text-color">Insurance</span>
@@ -81,11 +83,13 @@
       <i class="fas fa-map-marked-alt"></i>
       <span class="goal-number text-color">$140</span>
       <span class="card-label text-color">Tours</span>
-    </div>
+    </div> -->
   </div>
 </div>
 
 <script>
+  var vue_dashboard;
+
   (function () {
     var eventdate = moment("2019-07-14");
     var todaysdate = moment();
@@ -93,5 +97,26 @@
     document.getElementById('countdown').innerHTML = days;
     var porcent = document.getElementById("porcent").innerText;
     document.getElementById("progress-bar").style.width = porcent;
+    init_Stadistic();
+
   })();
+
+
+  function init_Stadistic() {
+    vue_dashboard = new Vue({
+      el: '#dashBoard',
+      data() {
+        return {
+          data: []
+        }
+      },
+      beforeCreate() {
+        axios.get('https://capitanswitzerland.000webhostapp.com/statistic.php')
+          .then((response) => {
+            this.data = response.data.body;
+            console.log("axios ===> ", response.data.body);
+          });
+      },
+    });
+  }
 </script>

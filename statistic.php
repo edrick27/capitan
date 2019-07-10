@@ -1,5 +1,9 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include_once './dbclass.php';
 
@@ -7,11 +11,21 @@ include_once './dbclass.php';
     $connection = $dbclass->getConnection();
 
     $query = "SELECT 
-                    f.type as `type`,
-                    SUM(f.money) as `total`,
-                    ((SUM(f.money) / 20000) * 100)  as `porcent`
-                FROM funds as f            
-                GROUP BY type;";
+                    ft.id AS `id`,
+                    ft.name AS `name`,
+                    ft.color AS `color`,
+                    ft.icon AS `icon`,
+                    f.total AS `total`,
+                    f.porcent AS `porcent`
+                    
+                FROM funds_type AS ft  
+                    LEFT JOIN 
+                        (SELECT
+                            funds.type AS `type`,
+                            SUM(funds.money) AS `total`,
+                            ((SUM(funds.money) / 20000) * 100)  AS `porcent`
+                        FROM funds) AS f
+                    ON f.type = ft.id";
 
     $stmt = $connection->query($query);
 
@@ -29,7 +43,10 @@ include_once './dbclass.php';
             extract($row);
 
             $p  = array(
-                "type" => $type,
+                "id" => $id,
+                "name" => $name,
+                "color" => $color,
+                "icon" => $icon,
                 "total" => $total,
                 "porcent" => $porcent,
             );

@@ -24,7 +24,8 @@ include_once './dbclass.php';
                             funds.type AS `type`,
                             SUM(funds.money) AS `total`,
                             ((SUM(funds.money) / 20000) * 100)  AS `porcent`
-                        FROM funds) AS f
+                        FROM funds
+                        GROUP BY funds.type) AS f
                     ON f.type = ft.id";
 
     $stmt = $connection->query($query);

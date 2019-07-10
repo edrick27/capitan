@@ -20,14 +20,13 @@
       <div style="text-align: right;" class="text-color text-goal">$250,000</div>
     </div>
     <div class="progress">
-      <div id="progress-bar" class="bg-clothing progress-bar progress-bar-striped progress-bar-animated"
-        role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-      <div style="width: 15%" class="bg-insurance progress-bar progress-bar-striped progress-bar-animated"
-        role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-      <div style="width: 20%" class="bg-lodging progress-bar progress-bar-striped progress-bar-animated"
-        role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-      <div style="width: 7%" class="bg-food progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-        aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+      <div v-for="item in data" class=" progress-bar progress-bar-striped progress-bar-animated"
+        v-bind:style="{ width: (item.porcent == null ? '0%' : item.porcent), backgroundColor: item.color}"
+        role="progressbar" 
+        aria-valuenow="75" 
+        aria-valuemin="0" 
+        aria-valuemax="100">
+      </div>
     </div>
     <div class="goal-stat">
       <span id="porcent" class="goal-number text-color">25%</span>
@@ -39,7 +38,7 @@
     </div>
     <div class="goal-stat">
       <span class="goal-number text-color">
-        <div id="countdown"></div>
+        <div>{{ days_to_go }}</div>
       </span>
       <span class="goal-label text-color">Days to Go</span>
     </div>
@@ -50,40 +49,13 @@
   </div>
   <div class="container-cards row">
     <div v-for="item in data" class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
-      <i class="fas fa-tshirt color-clothing"></i>
-      <span class="goal-number text-color">${{ item.total }}</span>
-      <span class="card-label text-color">Clothing</span>
+      <i v-bind:class="item.icon" 
+        class="fas"
+        v-bind:style="{ color: item.color }">
+      </i>
+      <span class="goal-number text-color">${{ (item.total == null ? '0' : item.total)  }}</span>
+      <span class="card-label text-color">{{ item.name }}</span>
     </div>
-    <!-- <div class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
-      <i class="fas fa-scroll color-insurance"></i>
-      <span class="goal-number text-color">$800</span>
-      <span class="card-label text-color">Insurance</span>
-    </div>
-    <div class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
-      <i class="fas fa-bed color-lodging"></i>
-      <span class="goal-number text-color">$1,00</span>
-      <span class="card-label text-color">Lodging</span>
-    </div>
-    <div class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
-      <i class="icon fas fa-shuttle-van"></i>
-      <span class="goal-number text-color">$500</span>
-      <span class="card-label text-color">Public transport</span>
-    </div>
-    <div class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
-      <i class="fas fa-plane"></i>
-      <span class="goal-number text-color">$250</span>
-      <span class="card-label text-color">Flight</span>
-    </div>
-    <div class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
-      <i class="fas fa-utensils color-food"></i>
-      <span class="goal-number text-color">$3000</span>
-      <span class="card-label text-color">Food</span>
-    </div>
-    <div class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
-      <i class="fas fa-map-marked-alt"></i>
-      <span class="goal-number text-color">$140</span>
-      <span class="card-label text-color">Tours</span>
-    </div> -->
   </div>
 </div>
 
@@ -91,23 +63,16 @@
   var vue_dashboard;
 
   (function () {
-    var eventdate = moment("2019-07-14");
-    var todaysdate = moment();
-    days = eventdate.diff(todaysdate, 'days');
-    document.getElementById('countdown').innerHTML = days;
-    var porcent = document.getElementById("porcent").innerText;
-    document.getElementById("progress-bar").style.width = porcent;
     init_Stadistic();
-
   })();
-
 
   function init_Stadistic() {
     vue_dashboard = new Vue({
       el: '#dashBoard',
       data() {
         return {
-          data: []
+          data: [],
+          days_to_go: 0,
         }
       },
       beforeCreate() {
@@ -117,6 +82,9 @@
             console.log("axios ===> ", response.data.body);
           });
       },
+      mounted() {
+        this.days_to_go = moment("2019-07-14").diff(moment(), 'days');
+      }
     });
   }
 </script>

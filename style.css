@@ -9,7 +9,7 @@
 }
 
 #countdown-wrap {
-  width: 90%;
+  width: 100%;
   height: 150px;
   padding: 20px;
   font-family: arial;
@@ -19,11 +19,8 @@
 
 .text-goal {
   font-size: 22px;
-  font-weight: 500px;
+  font-weight: 500;
   width: 33%;
-  @media only screen and (max-width : 640px) {
-    text-align: center;  
-  }
 }
 
 #glass {
@@ -87,13 +84,19 @@
 
 @media only screen and (max-width : 640px) {
   .container-cards{
-    margin-left: 10%;
+    margin-left: 2%;
   }
 
   .card-item{
     padding: 10px;
     float: left;
-    margin: 20px;
+    margin: 15px;
+    width: 40%;
+  }
+
+  .text-goal {
+    font-size: 15px;
+    font-weight: 600;
     width: 33%;
   }
 }
@@ -101,6 +104,8 @@
 
 .card-label{
   font-size: 16px;
+  white-space: nowrap;
+  float: left;
 }
 
 .icon{

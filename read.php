@@ -11,7 +11,14 @@ include_once './dbclass.php';
     $dbclass = new Database();
     $connection = $dbclass->getConnection();
 
-    $query = "SELECT f.id, f.sponsor, f.type, f.money FROM funds as f ORDER BY f.id DESC;";
+    $query = "SELECT 
+                f.id, 
+                f.sponsor, 
+                ft.name AS type, 
+                f.money 
+            FROM funds AS f 
+            LEFT JOIN funds_type AS ft on ft.id = f.type
+            ORDER BY f.id DESC;";
 
     $stmt = $connection->query($query);
 

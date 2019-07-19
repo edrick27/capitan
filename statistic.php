@@ -67,9 +67,9 @@ include_once './dbclass.php';
         while ($row = $stmt->fetch_assoc()){
 
             extract($row);
-
+            
             $p  = array(
-                "raised" => str_replace("USD", "$", money_format('%i', $raised)),
+                "raised" => "$" . number_format( $raised, 0 ),
                 "funded" => is_null($funded) ? "0%" : floor($funded) . "%" ,
                 "sponsors" => $sponsors,
             );

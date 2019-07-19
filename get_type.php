@@ -11,12 +11,14 @@ include_once './dbclass.php';
     $dbclass = new Database();
     $connection = $dbclass->getConnection();
 
-    $query = "SELECT f.id, f.sponsor, f.type, f.money FROM funds as f ORDER BY f.id DESC;";
+    $query = "SELECT 
+                    ft.id AS `id`,
+                    ft.name AS `name`
+                FROM funds_type AS ft";
 
     $stmt = $connection->query($query);
 
     if($stmt->num_rows > 0){
-
 
         $response = array();
         $response["data"] = array();
@@ -27,9 +29,7 @@ include_once './dbclass.php';
 
             $item  = array(
                 "id" => $id,
-                "sponsor" => $sponsor,
-                "type" => $type,
-                "money" => $money,
+                "name" => $name,
             );
 
             array_push($response["data"], $item);

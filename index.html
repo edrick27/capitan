@@ -1,13 +1,9 @@
-<style>
-
-</style>
-
 <head>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <!-- <link rel="stylesheet" href="https://capitanswitzerland.000webhostapp.com/style.css"> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -20,8 +16,8 @@
       <div style="text-align: right;" class="text-color text-goal">$250,000</div>
     </div>
     <div class="progress">
-      <div v-for="item in data" class=" progress-bar progress-bar-striped progress-bar-animated"
-        v-bind:style="{ width: (item.porcent == null ? '0%' : item.porcent), backgroundColor: item.color}"
+      <div v-for="item in data" class=" progress-bar progress-bar-striped active"
+        v-bind:style="{ width: item.porcent, backgroundColor: item.color}"
         role="progressbar" 
         aria-valuenow="75" 
         aria-valuemin="0" 
@@ -29,21 +25,15 @@
       </div>
     </div>
     <div class="goal-stat">
-      <span id="porcent" class="goal-number text-color">25%</span>
+      <span id="porcent" class="goal-number text-color">{{ general.funded }}</span>
       <span class="goal-label">Funded</span>
     </div>
     <div class="goal-stat">
-      <span class="goal-number text-color">$1,640</span>
+      <span class="goal-number text-color">{{ general.raised }}</span>
       <span class="goal-label text-color">Raised</span>
     </div>
     <div class="goal-stat">
-      <span class="goal-number text-color">
-        <div>{{ days_to_go }}</div>
-      </span>
-      <span class="goal-label text-color">Days to Go</span>
-    </div>
-    <div class="goal-stat">
-      <span class="goal-number text-color">38</span>
+      <span class="goal-number text-color">{{ general.sponsors }}</span>
       <span class="goal-label text-color">Sponsors</span>
     </div>
   </div>
@@ -72,6 +62,11 @@
       data() {
         return {
           data: [],
+          general: { 
+                    raised :"$0",
+                    funded : "0%",
+                    sponsors : "0"
+                  },
           days_to_go: 0,
         }
       },
@@ -79,11 +74,14 @@
         axios.get('https://capitanswitzerland.000webhostapp.com/statistic.php')
           .then((response) => {
             this.data = response.data.body;
-            console.log("axios ===> ", response.data.body);
+            if(response.data.general.length > 0){
+              this.general = response.data.general[0];
+            }
+            console.log("axios ===> ", this.general);
           });
       },
       mounted() {
-        this.days_to_go = moment("2019-07-14").diff(moment(), 'days');
+        // this.days_to_go = moment("2019-07-14").diff(moment(), 'days');
       }
     });
   }

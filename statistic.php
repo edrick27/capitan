@@ -23,7 +23,7 @@ include_once './dbclass.php';
                         (SELECT
                             funds.type AS `type`,
                             SUM(funds.money) AS `total`,
-                            ((SUM(funds.money) / 20000) * 100)  AS `porcent`
+                            ((SUM(funds.money) / 250000) * 100)  AS `porcent`
                         FROM funds
                         GROUP BY funds.type) AS f
                     ON f.type = ft.id";
@@ -37,7 +37,6 @@ include_once './dbclass.php';
 
         $response = array();
         $response["body"] = array();
-        $response["count"] = $count;
 
         while ($row = $stmt->fetch_assoc()){
 
@@ -49,16 +48,39 @@ include_once './dbclass.php';
                 "color" => $color,
                 "icon" => $icon,
                 "total" => $total,
-                "porcent" => $porcent,
+                "porcent" => is_null($porcent) ? "0%" : floor($porcent) . "%" ,
             );
 
             array_push($response["body"], $p);
         }
 
+        $response["general"] = array();
+
+        $query = "SELECT
+                    SUM(funds.money) AS `raised`,
+                    ((SUM(funds.money) / 250000) * 100)  AS `funded`,
+                    COUNT(DISTINCT funds.sponsor)  AS `sponsors`
+                FROM funds";
+
+        $stmt = $connection->query($query);
+        setlocale(LC_MONETARY, 'en_US');
+        while ($row = $stmt->fetch_assoc()){
+
+            extract($row);
+
+            $p  = array(
+                "raised" => str_replace("USD", "$", money_format('%i', $raised)),
+                "funded" => is_null($funded) ? "0%" : floor($funded) . "%" ,
+                "sponsors" => $sponsors,
+            );
+
+            array_push($response["general"], $p);
+        }
+
         echo json_encode($response);
     } else {
         echo json_encode(
-            array("body" => array(), "count" => 0)
+            array("body" => array(), "general" => array())
         );
     }
 ?>

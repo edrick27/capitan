@@ -112,18 +112,7 @@
   font-size: 28px;
 }
 
-.bg-clothing{
-  background-color: #08b1a8 !important;
-}
-
-.bg-insurance{
-  background-color: #8e49fd !important;
-}
-
-.bg-lodging{
-  background-color: #ff934c !important;
-}
-
-.bg-food{
-  background-color: #0835b1 !important;
+.table-details {
+  height: 250px;
+  overflow-y: auto;
 }

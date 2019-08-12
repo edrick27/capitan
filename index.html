@@ -54,8 +54,13 @@
           <h3 class="modal-title" v-bind:style="{ color: modal.color}">{{ modal.name }}</h3>
         </div>
         <div class="modal-body">
+          <div class="conteiner-title">
+            <div class="text-color text-goal">$0</div>
+            <div style="text-align: -webkit-center;" class="text-color text-goal">{{modal.half}}</div>
+            <div style="text-align: right;" class="text-color text-goal">{{modal.total}}</div>
+          </div>
           <div class="progress">
-            <div class=" progress-bar progress-bar-striped active"
+            <div class="progress-bar progress-bar-striped active"
               v-bind:style="{ width: modal.porcent, backgroundColor: modal.color}" role="progressbar" aria-valuenow="75"
               aria-valuemin="0" aria-valuemax="100">
             </div>
@@ -64,16 +69,12 @@
             <table class="table table-striped">
               <thead class="thead-dark">
                 <tr>
-                  <th scope="col">Item</th>
                   <th scope="col">Sponsor</th>
-                  <th scope="col">Money</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="item in list">
-                  <th>{{ item.id }}</th>
                   <th>{{ item.sponsor }}</th>
-                  <th>{{ item.money }}</th>
                 </tr>
               </tbody>
             </table>
@@ -111,6 +112,8 @@
             name: "",
             color: "#000000",
             porcent: "0%",
+            total: "$1000",
+            half: "$500",
           },
           list: [],
           days_to_go: 0
@@ -123,11 +126,16 @@
             url: "https://capitanswitzerland.000webhostapp.com/get_details.php",
             data: { type: type },
           }).then((response) => {
-            this.modal.porcent = response.general[0].porcent;
-            console.log("response.general",response.general);
-            
+            this.setModalValue(response.general);
             this.list = response.body;
           });
+        },
+        setModalValue(values) {
+          if (values.length > 0) {
+            this.modal.porcent = values[0].porcent;
+            this.modal.total = "$" + values[0].total;
+            this.modal.half = "$" + (values[0].total / 2);
+          }
         },
         openModal(item) {
           this.modal = JSON.parse(JSON.stringify(item));
@@ -145,7 +153,7 @@
           });
       },
       mounted() {
-        $('#myModal').on('hidden.bs.modal',() => {
+        $('#myModal').on('hidden.bs.modal', () => {
           this.list = [];
         })
         // this.days_to_go = moment("2019-07-14").diff(moment(), 'days');

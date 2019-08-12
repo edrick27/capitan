@@ -16,7 +16,8 @@ include_once './dbclass.php';
                 f.sponsor,
                 f.money
             FROM `funds` AS f 
-            WHERE f.type = $type";
+            WHERE f.type = $type
+            ORDER BY f.money DESC";
 
     $stmt = $connection->query($query);
 
@@ -44,7 +45,8 @@ include_once './dbclass.php';
         $response["general"] = array();
 
         $query = "SELECT 
-                    ((SUM(f.money) / ft.total) * 100)  AS `porcent`  
+                    ((SUM(f.money) / ft.total) * 100)  AS `porcent`,
+                    ft.total  AS `total`
                 FROM `funds` AS f 
                 LEFT JOIN funds_type ft ON ft.id = f.type
                 WHERE f.type = $type";
@@ -57,6 +59,7 @@ include_once './dbclass.php';
             
             $p  = array(
                 "porcent" => is_null($porcent) ? "0%" : floor($porcent) . "%" ,
+                "total" => $total
             );
 
             array_push($response["general"], $p);

@@ -12,13 +12,22 @@ include_once './dbclass.php';
     $connection = $dbclass->getConnection();
 
     // sanitize
+    $id = htmlspecialchars(strip_tags($_POST['id']));
     $type = htmlspecialchars(strip_tags($_POST['type']));
     $sponsor = htmlspecialchars(strip_tags($_POST['sponsor']));
     $money = htmlspecialchars(strip_tags($_POST['money']));
 
-    $query = "INSERT INTO `funds` (`sponsor`, `type`, `money`) 
-                VALUES ('$sponsor', '$type', '$money');";
-
+    if($id == 0){
+        $query = "INSERT INTO `funds` (`sponsor`, `type`, `money`) 
+            VALUES ('$sponsor', '$type', '$money');";
+    }else{
+        $query = "UPDATE `funds`
+                    SET `sponsor` = '$sponsor',
+                        `type` = '$type',
+                        `money` = '$money'
+                    WHERE id = '$id'";
+    }
+    
     if ($connection->query($query) === TRUE) {
         echo "success";
     } else {

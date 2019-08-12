@@ -14,7 +14,8 @@ include_once './dbclass.php';
     $query = "SELECT 
                 f.id, 
                 f.sponsor, 
-                ft.name AS type, 
+                ft.id AS type, 
+                ft.name AS typelabel, 
                 f.money 
             FROM funds AS f 
             LEFT JOIN funds_type AS ft on ft.id = f.type
@@ -36,6 +37,7 @@ include_once './dbclass.php';
                 "id" => $id,
                 "sponsor" => $sponsor,
                 "type" => $type,
+                "typelabel" => $typelabel,
                 "money" => $money,
             );
 

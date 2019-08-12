@@ -72,9 +72,10 @@
     <thead>
         <tr>
             <th>id</th>
-            <th>sponsor</th>
+            <th>Sponsor</th>
+            <th>Type</th>
             <th>type</th>
-            <th>money</th>
+            <th>Money</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -101,6 +102,7 @@
             data() {
                 return {
                     form: {
+                        id: 0,
                         sponsor: "",
                         type: 0,
                         money: ""
@@ -115,19 +117,24 @@
             },
             methods: {
                 saveData() {
-                    $.ajax({
-                        method: "POST",
-                        url: "https://capitanswitzerland.000webhostapp.com/add.php",
-                        data: this.form,
-                    });
-                    setTimeout(() => {
-                        data_table.ajax.reload(null, false);
-                        this.form = {
-                            sponsor: "",
-                            type: 0,
-                            money: ""
-                        };
-                    }, 500);
+                    console.log("this.form",this.form);
+                    
+                    if (this.form.money != "" && this.form.type != 0) {
+                        $.ajax({
+                            method: "POST",
+                            url: "https://capitanswitzerland.000webhostapp.com/add.php",
+                            data: this.form,
+                        });
+                        setTimeout(() => {
+                            data_table.ajax.reload(null, false);
+                            this.form = {
+                                id: 0,
+                                sponsor: "",
+                                type: 0,
+                                money: ""
+                            };
+                        }, 500);
+                    }
                 },
                 openModalDetele(item,selected) {
                     this.modal.id_donation = item.id;
@@ -184,7 +191,8 @@
                     "visible": false
                 },
                 { "data": "sponsor" },
-                { "data": "type" },
+                { "data": "type", "visible": false },
+                { "data": "typelabel" },
                 { "data": "money" },
                 {
                     "width": "5%",

@@ -18,6 +18,9 @@
         margin-left: 30%;
         height: 35px;
     }
+    .row-selected {
+        background-color: #528ef4 !important;
+    }
     #data_table tbody tr:hover {
        background-color: #91fbff;
        cursor: pointer;
@@ -30,7 +33,7 @@
 <div id="form-data">
     <form class="form-sponsor">
         <div class="form-group row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="sponsorname">Sponsor name</label>
                 <input v-model="form.sponsor" type="text" class="form-control" id="sponsorname"
                     placeholder="Sponsor name">
@@ -42,9 +45,12 @@
                     <option v-for="item in types" :value="item.id">{{ item.name }}</option>
                 </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="money">Money</label>
                 <input v-model="form.money" type="number" class="form-control" id="money" placeholder="money" required>
+            </div>
+            <div class="col-md-2">
+                <button v-if="form.id !== 0" class="btn-danger" v-on:click="removeEdit"><i class="fas fa-times"></i></button>
             </div>
         </div>
     </form>
@@ -140,11 +146,32 @@
                     this.modal.id_donation = item.id;
                     this.modal.sponsor = item.sponsor;
                     this.selected = selected;
+                    this.selectedRow();
                     $('#myModal').modal('show');
+                },
+                selectedRow() {
+                    this.removeSelectedRow();
+                    this.selected.addClass('row-selected');
+                },
+                removeEdit(e) {
+                    e.preventDefault();
+                    if (e) {
+                        this.removeSelectedRow();
+                        this.form = {
+                                id: 0,
+                                sponsor: "",
+                                type: 0,
+                                money: ""
+                            };
+                    }
+                },
+                removeSelectedRow() {
+                    data_table.$('tr.row-selected').removeClass('row-selected');
                 },
                 selectRowEdit(item,selected) {
                     this.form = item;
                     this.selected = selected;
+                    this.selectedRow();
                 },
                 deleteRow(){
                     var formData = new FormData();
@@ -174,6 +201,11 @@
                         this.types = response.data.data;
                     });
             },
+            mounted() {
+                $('#myModal').on('hidden.bs.modal', () => {
+                    this.removeSelectedRow();
+                });
+            }
         });
     }
 

@@ -11,6 +11,32 @@ include_once './dbclass.php';
     $connection = $dbclass->getConnection();
     $type = htmlspecialchars(strip_tags($_POST['type']));
 
+    $response = array();
+    $response["body"] = array();
+    $response["general"] = array();
+
+    $query = "SELECT 
+                ((SUM(f.money) / ft.total) * 100)  AS `porcent`,
+                ft.total  AS `total`
+            FROM id10129394_lets_go_to_switzerland.funds_type ft 
+            LEFT JOIN `funds` f ON f.type = ft.id
+            WHERE ft.id = $type;";
+
+    $stmt = $connection->query($query);
+    
+    setlocale(LC_MONETARY, 'en_US');
+    while ($row = $stmt->fetch_assoc()){
+
+        extract($row);
+        
+        $p  = array(
+            "porcent" => is_null($porcent) ? "0%" : floor($porcent) . "%" ,
+            "total" => $total
+        );
+
+        array_push($response["general"], $p);
+    }
+
     $query = "SELECT 
                 f.id,
                 f.sponsor,
@@ -25,10 +51,6 @@ include_once './dbclass.php';
 
     if($count > 0){
 
-
-        $response = array();
-        $response["body"] = array();
-
         while ($row = $stmt->fetch_assoc()){
 
             extract($row);
@@ -42,33 +64,8 @@ include_once './dbclass.php';
             array_push($response["body"], $p);
         }
 
-        $response["general"] = array();
-
-        $query = "SELECT 
-                    ((SUM(f.money) / ft.total) * 100)  AS `porcent`,
-                    ft.total  AS `total`
-                FROM `funds` AS f 
-                LEFT JOIN funds_type ft ON ft.id = f.type
-                WHERE f.type = $type";
-
-        $stmt = $connection->query($query);
-        setlocale(LC_MONETARY, 'en_US');
-        while ($row = $stmt->fetch_assoc()){
-
-            extract($row);
-            
-            $p  = array(
-                "porcent" => is_null($porcent) ? "0%" : floor($porcent) . "%" ,
-                "total" => $total
-            );
-
-            array_push($response["general"], $p);
-        }
-
         echo json_encode($response);
     } else {
-        echo json_encode(
-            array("body" => array(), "general" => array())
-        );
+        echo json_encode($response);
     }
 ?>

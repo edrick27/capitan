@@ -15,6 +15,7 @@ include_once './dbclass.php';
                     ft.name AS `name`,
                     ft.color AS `color`,
                     ft.icon AS `icon`,
+                    ft.total AS `total_type`,
                     f.total AS `total`,
                     f.porcent AS `porcent`
                     
@@ -48,6 +49,7 @@ include_once './dbclass.php';
                 "color" => $color,
                 "icon" => $icon,
                 "total" => $total,
+                "total_type" => $total_type,
                 "porcent" => is_null($porcent) ? "0%" : floor($porcent) . "%" ,
             );
 

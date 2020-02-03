@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thanks</title>
+    <link rel='stylesheet prefetch'
+        href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css'>
+</head>
+
+<body>
+    <div class="jumbotron text-xs-center">
+        <h1 class="display-3">Thank you very much!</h1>
+        <p class="lead"><strong>Please, If you like to post your donation in our we site,</strong> complete the form with your name.</p>
+
+        <div id="form-data">
+            <form class="form-sponsor">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <label for="sponsorname">Name:</label>
+                        <input v-model="form.sponsor" type="text" class="form-control" id="sponsorname"
+                            placeholder="Sponsor name">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="idtype">Type:</label>
+                        <select v-model="form.type" class="form-control">
+                            <option value="0" disabled selected>a category</option>
+                            <option v-for="item in types" :value="item.id">{{ item.name }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="money">Money</label>
+                        <input v-model="form.money" type="number" class="form-control" id="money" placeholder="money"
+                            required>
+                    </div>
+                    <div class="col-md-2">
+                        <button v-if="form.id !== 0" class="btn-danger" v-on:click="removeEdit"><i
+                                class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </form>
+            <button v-on:click="saveData" type="submit" class="btn btn-primary btn-save">Save</button>
+        </div>
+        <hr>
+        <p>
+            Having trouble? <a href="">Contact us</a>
+        </p>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script>
+    var vue_form;
+    var data_table;
+
+    $(document).ready(function () {
+        init_form();
+    });
+
+
+    function init_form() {
+        vue_form = new Vue({
+            el: '#form-data',
+            data() {
+                return {
+                    form: {
+                        id: 0,
+                        sponsor: "",
+                        type: 0,
+                        money: ""
+                    },
+                    types: [],
+                    selected: null,
+                    modal: {
+                        id_donation: "0",
+                        sponsor: "",
+                    },
+                }
+            },
+            methods: {
+                saveData() {
+                    console.log("this.form", this.form);
+
+                    if (this.form.money != "" && this.form.type != 0) {
+                        $.ajax({
+                            method: "POST",
+                            url: "https://capitanswitzerland.000webhostapp.com/add.php",
+                            data: this.form,
+                        });
+                        setTimeout(() => {
+                            data_table.ajax.reload(null, false);
+                            this.form = {
+                                id: 0,
+                                sponsor: "",
+                                type: 0,
+                                money: ""
+                            };
+                        }, 500);
+                    }
+                },
+            },
+            beforeCreate() {
+                axios.get('https://capitanswitzerland.000webhostapp.com/get_type.php')
+                    .then((response) => {
+                        console.log(response);
+
+                        this.types = response.data.data;
+                    });
+            },
+        });
+    }
+
+</script>
+
+</html>

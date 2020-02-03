@@ -12,6 +12,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <div id="dashBoard" class="body">
+
+  <!-- general statics -->
   <div class="thumbnail" id="countdown-wrap">
     <div class="conteiner-title">
       <div class="text-color text-goal">$0</div>
@@ -37,15 +39,39 @@
       <span class="goal-label text-color">Sponsors</span>
     </div>
   </div>
+  <!-- general statics -->
+
+  <!-- categories cards -->
   <div class="container-cards row">
     <div v-for="item in data" v-on:click="openModal(item)"
       class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
       <i v-bind:class="item.icon" class="fas" v-bind:style="{ color: item.color }">
       </i>
-      <span class="goal-number text-color">${{ (item.total == null ? '0' : item.total)  }}</span>
+      <span class="goal-number text-color">Total: ${{ (item.total_type) }}</span>
+      <span class="goal-number text-color">Raised: ${{ (item.total == null ? '0' : item.total)  }}</span>
       <span class="card-label text-color">{{ item.name }}</span>
     </div>
   </div>
+  <!-- categories cards -->
+
+  <!-- table sponsors -->
+  <div class="table-responsive table-details container-cards">
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Sponsor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in sponsors">
+          <th>{{ item.sponsor }}</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- table sponsors -->
+
+  <!-- modal -->
   <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -87,6 +113,7 @@
     </div>
 
   </div>
+  <!-- modal -->
 </div>
 
 <script>
@@ -103,6 +130,7 @@
       data() {
         return {
           data: [],
+          sponsors: [],
           general: {
             raised: "$0",
             funded: "0%",
@@ -150,6 +178,12 @@
             if (response.data.general.length > 0) {
               this.general = response.data.general[0];
             }
+          });
+        axios.get('https://capitanswitzerland.000webhostapp.com/get_sponsors.php')
+          .then((response) => {
+            console.log("table_sponsors");
+            console.log(response.data);
+            this.sponsors = response.data;
           });
       },
       mounted() {

@@ -52,7 +52,8 @@
 }
 
 .goal-number {
-  font-weight: bold;
+  font-weight: 550;
+  font-size: 20px;
 }
 
 .thumbnail {

@@ -16,6 +16,9 @@ include_once './dbclass.php';
     $type = htmlspecialchars(strip_tags($_POST['type']));
     $sponsor = htmlspecialchars(strip_tags($_POST['sponsor']));
     $money = htmlspecialchars(strip_tags($_POST['money']));
+    $anonymous = htmlspecialchars(strip_tags($_POST['anonymous']));
+
+    if($anonymous) $sponsor = "anonymous";
 
     if($id == 0){
         $query = "INSERT INTO `funds` (`sponsor`, `type`, `money`) 

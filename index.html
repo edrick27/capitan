@@ -44,10 +44,13 @@
   <!-- categories cards -->
   <div class="container-cards row">
     <div v-for="item in data" v-on:click="openModal(item)"
-      class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2">
+      class="icon card-item thumbnail col-4 col-xl-2 col-lg-2 col-sm-2" v-bind:class="{ 'completed-card': item.total_type == item.total }" >
       <i v-bind:class="item.icon" class="fas" v-bind:style="{ color: item.color }">
       </i>
-      <span class="goal-number text-color">Total: ${{ (item.total_type) }}</span>
+      <span v-if=" item.total_type !== item.total " class="goal-number text-color" >Total: ${{ (item.total_type) }}</span>
+      <span v-if=" item.total_type == item.total " class="goal-number text-color-wh">ready! 
+        <i class="fas fa-check-circle"></i>
+      </span>
       <span class="goal-number text-color">Raised: ${{ (item.total == null ? '0' : item.total)  }}</span>
       <span class="card-label text-color">{{ item.name }}</span>
     </div>
@@ -56,7 +59,7 @@
 
   <!-- table sponsors -->
   <div class="table-responsive table-details container-cards">
-    <table class="table table-striped">
+    <table class="table table-striped tableFixHead">
       <thead class="thead-dark">
         <tr>
           <th scope="col">Sponsor</th>
@@ -64,10 +67,11 @@
       </thead>
       <tbody>
         <tr v-for="item in sponsors">
-          <th>{{ item.sponsor }}</th>
+          <td>{{ item.sponsor }}</td>
         </tr>
       </tbody>
     </table>
+    <button v-if="show_more" v-on:click="loadmore(10000)"  type="submit" class="btn btn-more btn-info">More</button>
   </div>
   <!-- table sponsors -->
 
@@ -144,10 +148,20 @@
             half: "$500",
           },
           list: [],
-          days_to_go: 0
+          days_to_go: 0,
+          show_more: true
         }
       },
       methods: {
+        loadmore(limit){
+          axios.get(`https://capitanswitzerland.000webhostapp.com/get_sponsors.php?limit=${limit}`)
+          .then((response) => {
+            console.log("table_sponsors");
+            console.log(response.data);
+            this.sponsors = response.data;
+          });
+          this.show_more = false;
+        },
         getDetails(type) {
           $.ajax({
             method: "POST",
@@ -179,12 +193,10 @@
               this.general = response.data.general[0];
             }
           });
-        axios.get('https://capitanswitzerland.000webhostapp.com/get_sponsors.php')
-          .then((response) => {
-            console.log("table_sponsors");
-            console.log(response.data);
-            this.sponsors = response.data;
-          });
+          setTimeout(() => {
+            this.loadmore(10);
+            this.show_more = true;
+          }, 100);
       },
       mounted() {
         $('#myModal').on('hidden.bs.modal', () => {
